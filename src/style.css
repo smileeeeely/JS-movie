@@ -1,0 +1,36 @@
+
+.mytitle{
+    height: 100px;
+
+    background-color: rgb(67, 67, 67);
+    background-position: center;
+    background-size: cover;
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+/* 메인 첫 화면에 나올 카드들*/
+.mycards{
+    display: grid;
+    grid-template-columns: repeat(5, minmax(150px, 1fr));;
+    grid-template-rows: repeat(5, minmax(200px, 1fr));
+    gap: 30px;
+}
+
+.card{
+    background-color: rgb(234, 234, 234);
+    border-radius: 10px;
+}
+
+.cardImg{
+    border-radius: 10px;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gowun+Dodum&family=Oswald:wght@200..700&display=swap');
+.cardTitle{
+    font-family: "Do Hyeon", serif;
+    font-style: normal;
+    font-weight: bold;
+}
