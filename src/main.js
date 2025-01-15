@@ -1,5 +1,8 @@
 const searchBtn = document.querySelector("#searchBtn");
 const searchInput = document.querySelector("#search");
+const resultUl = document.querySelector("#cards");
+const modal = document.querySelector(".modal");
+const closeBtn = document.querySelector(".close");
 
 /** API 받아올 때 필요한 옵션 */
 const options = {
@@ -31,6 +34,8 @@ async function getPopularMoviesData(page = 1) {
 
   return await response.json();
 }
+// search 데이터로 다른 영화 리스트도 다 가져오기
+// query,,,param,,
 
 /** 받아온 데이터 카드 리스트로 바꾸기 */
 async function makeDataToCardList() {
@@ -50,18 +55,18 @@ async function makeDataToCardList() {
 
 /** 카드리스트 화면에 띄우기 */
 async function renderCardList(list) {
-  const resultUl = document.querySelector("#cards");
   console.log(`search input list : `, list);
   let movieCards = "";
 
   for (let i = 0; i < list.length; i++) {
-    movieCards += `<div class="card">
+    movieCards += `<div id="${i}" class="card" >
     <img class="cardImg" src= "${list[i].poster_url}">
     <p class="cardTitle">제목 : ${list[i].title}</p>
     <p calss="cardVoteAverage">평점 : ${list[i].vote_average}</p> </div>`;
   }
   resultUl.innerHTML = movieCards;
 }
+//index값 보다는 data mdn로 id 값 주기
 
 /** image의 base url 받아오기 */
 async function getImageBaseUrl() {
@@ -83,8 +88,9 @@ searchBtn.addEventListener("click", function () {
   }
   getSearchInputList(input);
 });
+// 엔터로 했을때도 검색이 되게
 
-// input으로 들어온 검색어가 들어가는 영화들만 리스트에 나타나게 한다
+/** input으로 들어온 검색어가 들어가는 영화들만 리스트에 나타나게 한다 */
 async function getSearchInputList(input) {
   console.log(input);
   const list = await makeDataToCardList();
@@ -99,6 +105,30 @@ async function getSearchInputList(input) {
 
   renderCardList(newList);
 }
+
+/** 영화 카드 클릭했을 때 상세 페이지 카드 팝업 */
+resultUl.addEventListener("click", function (e) {
+  console.log(e.target);
+  modal.style.display = "block";
+});
+//closest 활용해서 카드 클릭했을 때만 이벤트 작용하게 하기
+
+/** 상세페이지 창 없애기 */
+closeBtn.addEventListener("click", function (e) {
+  modal.style.display = "none";
+});
+
+// /** 상세페이지에 나올 내용 붙이기 */
+// async function renderPopUpCardDetail() {
+// const modal_content = document.querySelector(".modal-content");
+//   let card = "";
+//   card = `
+//     <span class="close">&times;</span>
+//       <h2 id="modal-title">제목</h2>
+//       <p id="modal-body">내용</p>
+//   `;
+//   modal_content.innerHTML = card; 
+// }
 
 async function main() {
   const list = await makeDataToCardList();
