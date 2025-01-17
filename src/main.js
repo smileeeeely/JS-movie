@@ -2,7 +2,8 @@ const searchBtn = document.querySelector("#searchBtn");
 const searchInput = document.querySelector("#search");
 const resultUl = document.querySelector("#cards");
 const modal = document.querySelector(".modal");
-const closeBtn = document.querySelector(".close");
+const closeBtn = document.querySelector(".closeBtn");
+const pageTitle = document.querySelector("#pageTitle");
 
 /** API 받아올 때 필요한 옵션 */
 const options = {
@@ -55,25 +56,24 @@ async function makeDataToCardList() {
 
 /** 카드리스트 화면에 띄우기 */
 async function renderCardList(list) {
-  console.log(`search input list : `, list);
   let movieCards = "";
 
   for (let i = 0; i < list.length; i++) {
-    movieCards += `<div id="${i}" class="card" >
-    <img class="cardImg" src= "${list[i].poster_url}">
-    <p class="cardTitle">제목 : ${list[i].title}</p>
-    <p calss="cardVoteAverage">평점 : ${list[i].vote_average}</p> </div>`;
+    movieCards += `<div id="${list[i].id}" class="card" >
+    <img id="${list[i].id}" class="cardImg" src= "${list[i].poster_url}">
+    <p id="${list[i].id}" class="cardTitle">제목 : ${list[i].title}</p>
+    <p id="${list[i].id}" calss="cardVoteAverage">평점 : ${list[i].vote_average}</p> </div>`;
   }
   resultUl.innerHTML = movieCards;
 }
 //index값 보다는 data mdn로 id 값 주기
 
 /** image의 base url 받아오기 */
-async function getImageBaseUrl() {
+async function getImageBaseUrl(size = 1) {
   const configuration = await getPosterImageBaseUrl();
 
   const baseUrl =
-    configuration.images.base_url + configuration.images.poster_sizes[1];
+    configuration.images.base_url + configuration.images.poster_sizes[size];
 
   return baseUrl;
 }
@@ -102,33 +102,56 @@ async function getSearchInputList(input) {
     }
     return movie.title.includes(input);
   });
-
+  if(newList.length === 0){
+    location.reload(true);
+    alert("검색어와 일치하는 영화가 없습니다.");
+  }
   renderCardList(newList);
 }
 
 /** 영화 카드 클릭했을 때 상세 페이지 카드 팝업 */
 resultUl.addEventListener("click", function (e) {
-  console.log(e.target);
-  modal.style.display = "block";
+  if (e.target.id !== "cards") {
+      modal.style.display = "block";
+      getTargetCardData(e.target.id);
+  }
 });
-//closest 활용해서 카드 클릭했을 때만 이벤트 작용하게 하기
 
-/** 상세페이지 창 없애기 */
-closeBtn.addEventListener("click", function (e) {
+/** 클릭한 영화 카드의 데이터 가져오기 */
+async function getTargetCardData(targetId) {
+  // console.log(targetId);
+  const list = await makeDataToCardList();
+  // console.log(list);
+  const test = list.filter((el) => el.id == targetId);
+  renderPopUpCardDetail(test[0]);
+}
+
+/** 모달 상세페이지에 나올 내용 붙이기 */
+function renderPopUpCardDetail(data) {
+  console.log(data);
+  const modal_content = document.querySelector(".modal-content");
+  let card = "";
+  card = `
+    <span class="closeBtn">&times;</span>
+    <img class="cardImg" src= "${data.poster_url}">
+    <h2 id="modal-title">${data.title}</h2>
+    <p>${data.release_date} </p>
+    <p id="modal-body">개봉일 : ${data.overview}</p>
+    <p>평점 : ${data.vote_average}</p>
+  `;
+  modal_content.innerHTML = card;
+}
+
+/** 모달 닫기 버튼 동작 */
+document.body.addEventListener("click", function (e) {
+  if(e.target.classList.contains("closeBtn"))
   modal.style.display = "none";
 });
 
-// /** 상세페이지에 나올 내용 붙이기 */
-// async function renderPopUpCardDetail() {
-// const modal_content = document.querySelector(".modal-content");
-//   let card = "";
-//   card = `
-//     <span class="close">&times;</span>
-//       <h2 id="modal-title">제목</h2>
-//       <p id="modal-body">내용</p>
-//   `;
-//   modal_content.innerHTML = card; 
-// }
+/** 페이지 타이틀 클릭하면 메인 화면으로 돌아가기 */
+pageTitle.addEventListener("click", function(){
+  location.reload(true);
+})
 
 async function main() {
   const list = await makeDataToCardList();

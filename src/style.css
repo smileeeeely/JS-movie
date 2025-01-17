@@ -9,10 +9,14 @@
   flex-direction: column;
 }
 
+#pageTitle{
+  cursor: pointer;
+}
+
 /* 메인 첫 화면에 나올 카드들*/
 .mycards {
   display: grid;
-  grid-template-columns: repeat(5, minmax(150px, 1fr));
+  grid-template-columns: repeat(5, minmax(160px, 1fr));
   grid-template-rows: repeat(5, minmax(200px, 1fr));
   gap: 30px;
 }
@@ -20,10 +24,12 @@
 .card {
   background-color: rgb(234, 234, 234);
   border-radius: 10px;
+  justify-content: center;
 }
 
 .cardImg {
   border-radius: 10px;
+  display: flex;
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gowun+Dodum&family=Oswald:wght@200..700&display=swap");
@@ -43,19 +49,19 @@
   background-color: rgba(0, 0, 0, 0.5);
 }
 
- .modal-content {
-    background-color: white;
-    margin: 15% auto;
-    padding: 20px;
-    width: 70%;
-    position: relative;
-    border-radius: 10px;
- }
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  width: 70%;
+  position: relative;
+  border-radius: 10px;
+}
 
-.close {
-    position: absolute;
-    right: 20px;
-    top: 10px;
-    font-size: 28px;
-    cursor: pointer;
+.closeBtn {
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  font-size: 28px;
+  cursor: pointer;
 }
