@@ -65,3 +65,7 @@
   font-size: 28px;
   cursor: pointer;
 }
+
+#searchBtn{
+  margin: 5px;
+}
